@@ -1,5 +1,5 @@
   
-const mockResponse = {
+export const mockResponse = {
   data: [
     {
       id: 1,
@@ -19,8 +19,8 @@ const mockResponse = {
   ]
 }
 
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  get: jest.fn().mockResolvedValue(mockResponse)
+  // get: jest.fn().mockResolvedValue(mockResponse)
+  get: () => Promise.resolve(mockResponse)
 }

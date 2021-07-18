@@ -1,0 +1,13 @@
+.alert{
+  width: 300px;
+  background-color: #d8d8d8;
+  border-radius: 5px;
+  padding: 12px 20px;
+  margin-top: 15px;
+  .close-btn{
+    font-weight: 600;
+    font-size: 16px;
+    color: #454545;
+    padding: 2px;
+  }
+}
