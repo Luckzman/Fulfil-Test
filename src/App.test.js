@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('App Component', () => {
+  // beforeEach(() => {
+  //   jest.mock("./__mocks__/axios")
+  // })
+  it('should be able to render data from endpoint', async () => {
+    render(<App />);
+    // const rowElements = await screen.findAllByTestId('rows')
+    // expect(rowElements).toBeInTheDocument();
+  })
 });

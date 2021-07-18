@@ -1,23 +1,9 @@
 import { useEffect, useState } from 'react';
 import { DataTable } from './components/DataTable/DataTable'
 import axios from 'axios';
-import { API_URL  } from './constants';
+import { API_URL, columns } from './utils/constants';
+import { pageData} from './utils/utils';
 import './App.css'
-
-const fetchData = async () => {
-	try {
-		const response = await axios.get(API_URL);
-		if(response.data){
-			return response.data;
-		}
-	} catch (error) {
-		console.log(error)
-	}
-}
-
-const pageData = ({  data, per = 50, page = 1}) => {
-	return data.slice(per * (page - 1), per * page);
-}
 
 function App() {
 	const [results, setResults] = useState([]);
@@ -27,24 +13,25 @@ function App() {
 		page: 1
 	});
 	
-	const columns = [
-		{id: 'ID', label: 'ID', numeric: true, width: '10px'},
-		{id: 'image', label: '', numeric: false, width: '10px'},		
-		{id: 'title', label: 'TITLE', numeric: false, width: '10px'},		
-	]
-
-	const getData = async() => {
-		const result = await fetchData();
-		setResults(result)
-		setData({
-			data: pageData({data: result}),
-			loading: false,
-			page: 1
-		})
+	const fetchData = async() => {
+		try {
+			const response = await axios.get(API_URL);
+			const { data } = response;
+			if(data){
+				setResults(data)
+				setData({
+					data: pageData({ data }),
+					loading: false,
+					page: 1
+				});
+			}
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	useEffect(() => {
-		getData()
+		fetchData()
 	}, [])
 	
 	const loadMoreData = () => {
