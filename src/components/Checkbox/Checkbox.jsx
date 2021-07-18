@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 const Checkbox = ({ id, handleClick, isChecked }) => {
   return (
@@ -10,5 +11,11 @@ const Checkbox = ({ id, handleClick, isChecked }) => {
     />
   );
 };
+
+Checkbox.propTypes = {
+  id: PropTypes.number,
+  handleClick: PropTypes.func,
+  isChecked: PropTypes.bool
+}
 
 export default Checkbox;

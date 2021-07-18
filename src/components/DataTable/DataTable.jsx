@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Checkbox from '../Checkbox/Checkbox'
+import PropTypes from 'prop-types'
 import './DataTable.scss'
 
 export const DataTable = ({columns, rightAlignID, rows, loadMoreData, onRowClick, onSelectionChange}) => {
@@ -7,18 +8,27 @@ export const DataTable = ({columns, rightAlignID, rows, loadMoreData, onRowClick
   const [isCheck, setIsCheck] = useState([]);
 	const ref = useRef(null)
 
+	/**
+	 * @name handleScroll
+	 * @description this function triggers infinite scrolling on datatable
+	 */
 	const handleScroll = () => {
-		const cY = window.scrollY;
-		const tbh = ref.current.offsetHeight;
-		const thresh = 1000;
-		if (tbh - cY - thresh < 0) loadMoreData()
+		const scrollY = window.scrollY;
+		const offsetHeight = ref.current.offsetHeight;
+		const threshold = 1000;
+		if (offsetHeight - scrollY - threshold < 0) loadMoreData()
 	}
 
 	useEffect (() => {
 		document.addEventListener('scroll', handleScroll);
+		//return this event listener to prevent memory leak
 		return () => document.removeEventListener('scroll', handleScroll)
 	})
 
+	/**
+	 * @name handleScroll
+	 * @description It checks and uncheck all checkboxes when this function runs
+	 */
 	const handleSelectAll = () => {
     setIsCheckAll(!isCheckAll);
     setIsCheck(rows.map(li => li.id));
@@ -27,10 +37,19 @@ export const DataTable = ({columns, rightAlignID, rows, loadMoreData, onRowClick
     }
   };
 
+	/**
+	 * @description this function runs when a row is clicked on
+	 * @param {number} id 
+	 */
 	const handleRowClick = (id) => {
 		onRowClick(id)
 	}
 
+	/**
+	 * @name handleSingleSelect
+	 * @description It checks and uncheck individual checkbox
+	 * @param {object} e 
+	 */
 	const handleSingleSelect = e => {
     const { id, checked } = e.target;
     setIsCheck([...isCheck, Number(id)]);
@@ -42,9 +61,8 @@ export const DataTable = ({columns, rightAlignID, rows, loadMoreData, onRowClick
 	useEffect(() => {
 		onSelectionChange(isCheck);
 	}, [isCheck])
-	console.log(isCheck, 'isCheck')
-	return (
 
+	return (
 		<table width="100%">
 			<thead>
 				<tr>
@@ -62,7 +80,7 @@ export const DataTable = ({columns, rightAlignID, rows, loadMoreData, onRowClick
 			</thead>
 			<tbody ref={ref}>
 				{rows.map(({id, thumbnailUrl, title}) => 
-					<tr data-testid='rows' className="cursor-pointer" key={id}>
+					<tr key={id} data-testid='rows' className="cursor-pointer">
 						<td data-testid={`single-checkbox-${id}`}>
 							<Checkbox
 								id={id}
@@ -78,4 +96,22 @@ export const DataTable = ({columns, rightAlignID, rows, loadMoreData, onRowClick
 			</tbody>
 		</table>
 	)
+}
+
+DataTable.propTypes = {
+	columns: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string,
+		label: PropTypes.string,
+		numeric: PropTypes.bool,
+		width: PropTypes.string
+	})),
+	rows: PropTypes.PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.number,
+		thumbnailUrl: PropTypes.string,
+		title: PropTypes.string,
+	})), 
+	onRowClick: PropTypes.func,
+	onSelectionChange: PropTypes.func,
+	rightAlignID: PropTypes.bool,
+	loadMoreData: PropTypes.func 
 }

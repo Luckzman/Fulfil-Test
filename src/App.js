@@ -16,6 +16,10 @@ function App() {
 		page: 1
 	});
 
+	/**
+	* @name fetchData
+	* @description This method make an async call
+	*/
 	const fetchData = async() => {
 		try {
 			const response = await axios.get(API_URL);
@@ -37,6 +41,10 @@ function App() {
 		fetchData()
 	}, [])
 	
+	/**
+	 * @name loadMoreData
+	 * @description this function loads more data when infinite scroll function is called
+	 */
 	const loadMoreData = () => {
 		if(data.loading) return;
 		setData((prev) => ({
@@ -44,21 +52,30 @@ function App() {
 			loading: true
 		}))
 
-		setData((prev) => {
-			return({
+		setData((prev) => ({
 			data: [
 				...prev.data,
 				...pageData({ data: results, page: prev.page + 1})
 			],
 			loading: false,
 			page: prev.page + 1
-		})})
+		}))
 	}
 
+	/**
+	 * @name onRowClick
+	 * @description This function run when a table body row is clicked on
+	 * @param {array} rowIndex 
+	 */
 	const onRowClick = (rowIndex) => {
 		alert(`You just clicked on row ${rowIndex}`)
 	}
 
+	/**
+	 * @name onSelectionChange
+	 * @description The function displays alert component when checkbox is clicked
+	 * @param {array} checkedItems 
+	 */
 	const onSelectionChange = (checkedItems) => {
 		if(checkedItems.length > 0){
 			return setShowAlert(prev => ({...prev, show: true, data: checkedItems}))
@@ -66,6 +83,10 @@ function App() {
 		return setShowAlert(prev => ({...prev, show: false, data: []}))
 	}
 	
+	/**
+	 * @name onCloseAlert
+	 * @description closes Alert component when close button is clicked
+	 */
 	const onCloseAlert = () => {
 		setShowAlert(prev => ({...prev, show: false, data: []}))
 	}
@@ -77,7 +98,6 @@ function App() {
 			</div>
 			<hr />
 			<div className='container'>
-				{console.log(showAlert.show , 'showAlert.show ')}
 				{showAlert.show && <div className="w-100 d-flex justify-center">
 					<Alert onClose={onCloseAlert}>{`${showAlert.data.length} item${showAlert.data.length === 1 ? '' : 's'} selected`}</Alert>
 					</div>
