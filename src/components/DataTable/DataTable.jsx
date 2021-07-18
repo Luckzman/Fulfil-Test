@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Checkbox from '../Checkbox'
+import Checkbox from '../Checkbox/Checkbox'
 import './DataTable.scss'
 
 export const DataTable = ({columns, rows, loadMoreData, onRowClick, onSelectionChange}) => {
@@ -48,13 +48,13 @@ export const DataTable = ({columns, rows, loadMoreData, onRowClick, onSelectionC
 						/>
 					</th>
 					{columns.map((item => 
-						<th key={item.id}>{item.label}</th>
+						<th data-testid="columnHeader" key={item.id}>{item.label}</th>
 						))}
 				</tr>
 			</thead>
 			<tbody ref={ref}>
 				{rows.map(({id, thumbnailUrl, title}) => 
-					<tr key={id} onClick={() => onRowClick(id)}>
+					<tr data-testid='rows' key={id} onClick={() => onRowClick(id)}>
 						<td>
 							<Checkbox
 								id={id}
